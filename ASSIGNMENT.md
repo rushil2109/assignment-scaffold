@@ -75,7 +75,23 @@ Submit:
 
 The marking harness will clone the repository at the submitted commit and evaluate only what is present there.
 
-The commit log is a deliverable and will be assessed. Reviewers will look at how you structure work, isolate changes, and communicate intent through commits.
+`JOURNAL.md` is the most important output in this exercise.
+
+We are not only evaluating the final code. We are evaluating how you think.
+
+Your journal should explain:
+
+- how you decomposed the problem
+- what you chose to implement first and why
+- key design decisions and tradeoffs
+- what you ruled out and why
+- mistakes, dead ends, or changes in approach
+- how you validated behavior and gained confidence
+- what you would change if you had more time
+
+Concrete and honest reflection is more valuable than polished hindsight. A brief record of real decision-making is better than a generic retrospective written after the fact.
+
+The commit log is also a deliverable and will be assessed. Reviewers will look at how you structure work, isolate changes, and communicate intent through commits.
 
 ## Operational Requirement
 
@@ -714,13 +730,27 @@ Your `README.md` must explain:
 Your `JOURNAL.md` should briefly explain:
 
 - your system shape
+- how you approached the problem and broke the work down
 - key tradeoffs
+- major decisions and why you made them
+- alternatives you considered and rejected
 - assumptions
+- mistakes, course corrections, or things you discovered while implementing
+- how you checked your own work and what gave you confidence
+- what remains uncertain or weak in the solution
 - known limitations
 - what you would do next with more time
 
+This journal is the single most important written artifact in the submission.
+
+Use it to show your reasoning, prioritization, and self-reflection. We are explicitly interested in how you think through ambiguity, not just in whether the final code appears polished.
+
+It is acceptable for the journal to be concise, but it should be specific. Ground it in the actual decisions you made in the repository.
+
 ## Marking Criteria
 
+- `Journal quality and engineering reasoning` are the primary lens through which the rest of the submission will be interpreted.
+- Reviewers will use `JOURNAL.md` and the commit history to understand your thought process, prioritization, and self-review.
 - `20%` Ease of operation: clone, run one command, system is ready
 - `25%` Public API correctness and completeness
 - `15%` Mock control API design and forward data flow fidelity
