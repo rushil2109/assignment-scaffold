@@ -16,6 +16,9 @@ services:
       DB_DATABASE: super_admin
       DB_USERNAME: laravel
       DB_PASSWORD: secret
+    volumes:
+      - .:/var/www/html
+      - vendor:/var/www/html/vendor
     depends_on:
       db:
         condition: service_healthy
@@ -40,3 +43,4 @@ services:
 
 volumes:
   db_data:
+  vendor:
