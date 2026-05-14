@@ -3,40 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\AdminApiInterface;
+use App\Http\Requests\CreateMemberRequest;
+use App\Http\Resources\ApiErrorResponse;
+use App\Http\Resources\CreateMemberResource;
 use App\Models\AuditOperation;
 use App\Models\Member;
 use App\Services\AuditService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Traits\ResolvesMember;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PublicApiController extends Controller
 {
+    use ResolvesMember;
+
     public function __construct(
         private AdminApiInterface $adminApi,
         private AuditService $auditService,
     ) {}
 
-    public function createMember(Request $request): JsonResponse
+    public function createMember(CreateMemberRequest $request): CreateMemberResource|ApiErrorResponse
     {
-        $data = $request->json()->all();
-
-        $requiredFields = ['userId', 'firstName', 'lastName', 'email', 'mobile', 'dateOfBirth'];
-        foreach ($requiredFields as $field) {
-            if (empty($data[$field])) {
-                return new JsonResponse(['ok' => false, 'error' => "{$field} is required"]);
-            }
-        }
-
-        if (! isset($data['initialInvestmentProfile']) || ! is_array($data['initialInvestmentProfile'])) {
-            return new JsonResponse(['ok' => false, 'error' => 'initialInvestmentProfile is required']);
-        }
-
-        $validationError = $this->validateAllocations($data['initialInvestmentProfile']);
-        if ($validationError) {
-            return new JsonResponse(['ok' => false, 'error' => $validationError]);
-        }
+        $data = $request->validated();
 
         $existing = Member::where('user_id', $data['userId'])->first();
         if ($existing) {
@@ -44,8 +32,7 @@ class PublicApiController extends Controller
                 ->where('operation', 'createMember')
                 ->value('id');
 
-            return new JsonResponse([
-                'ok' => true,
+            return new CreateMemberResource([
                 'memberId' => $existing->id,
                 'accountId' => $existing->account->account_id,
                 'operationId' => $operationId,
@@ -68,48 +55,11 @@ class PublicApiController extends Controller
             ]);
             $this->auditService->completeOperation($operationId, 'success');
 
-            return new JsonResponse([
-                'ok' => true,
+            return new CreateMemberResource([
                 'memberId' => $result['memberId'],
                 'accountId' => $result['accountId'],
                 'operationId' => $operationId,
             ]);
         });
-    }
-
-    private function validateAllocations(array $allocations): ?string
-    {
-        $validCodes = ['Cash', 'Conservative', 'Balanced', 'Growth', 'HighGrowth'];
-        $seen = [];
-        $sum = 0;
-
-        foreach ($allocations as $allocation) {
-            if (! isset($allocation['assetCode']) || ! isset($allocation['percentage'])) {
-                return 'Each allocation must have assetCode and percentage';
-            }
-
-            if (! in_array($allocation['assetCode'], $validCodes, true)) {
-                return "Invalid asset code: {$allocation['assetCode']}";
-            }
-
-            if (in_array($allocation['assetCode'], $seen, true)) {
-                return "Duplicate asset code: {$allocation['assetCode']}";
-            }
-            $seen[] = $allocation['assetCode'];
-
-            $percentage = $allocation['percentage'];
-            $parts = explode('.', (string) $percentage);
-            if (isset($parts[1]) && strlen($parts[1]) > 2) {
-                return 'Percentages must have at most 2 decimal places';
-            }
-
-            $sum = bcadd($sum, (string) $percentage, 2);
-        }
-
-        if (bccomp($sum, '100.00', 2) !== 0) {
-            return 'Allocations must sum to exactly 100.00';
-        }
-
-        return null;
     }
 }
