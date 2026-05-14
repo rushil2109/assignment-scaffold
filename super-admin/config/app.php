@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,8 +23,8 @@ return [
     ],
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        App\Providers\AppServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        AppServiceProvider::class,
+        RouteServiceProvider::class,
     ])->toArray(),
 
     'aliases' => Facade::defaultAliases()->merge([
