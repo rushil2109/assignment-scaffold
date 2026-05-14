@@ -45,6 +45,10 @@ git status  # should be on main, working tree clean (stash or commit WIP first)
 # Single change, runs on main directly (everything else depends on it)
 git checkout -b impl/schema-bootstrap-clean
 
+claude
+# /opsx:apply schema-bootstrap-clean @files Refer to them if needed
+# Sync and archive the changes.
+# Group and commit the changes. Use gh api to open the PR.
 # >>> Implement: openspec/changes/schema-bootstrap-clean <<<
 # After implementation:
 git add -A && git commit -m "feat: database schema, bootstrap and clean commands"
