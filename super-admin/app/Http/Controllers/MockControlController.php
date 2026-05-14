@@ -2,36 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddTransactionsRequest;
+use App\Http\Requests\SetDailyUnitPricesRequest;
+use App\Http\Resources\ApiErrorResponse;
 use App\Models\Member;
 use App\Models\Transaction;
 use App\Models\UnitPrice;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MockControlController extends Controller
 {
-    public function addTransactions(Request $request): JsonResponse
+    public function addTransactions(AddTransactionsRequest $request): JsonResponse
     {
-        $userId = $request->input('userId');
-        $accountId = $request->input('accountId');
+        $data = $request->validated();
 
-        $member = Member::where('user_id', $userId)->first();
-
+        $member = Member::where('user_id', $data['userId'])->first();
         if (! $member) {
-            return new JsonResponse(['ok' => false, 'error' => 'Member not found']);
+            return ApiErrorResponse::make('Member not found');
         }
 
         $account = $member->account;
-
-        if (! $account || $account->account_id !== $accountId) {
-            return new JsonResponse(['ok' => false, 'error' => 'Account not found']);
+        if (! $account || $account->account_id !== $data['accountId']) {
+            return ApiErrorResponse::make('Account not found');
         }
 
-        $transactions = $request->input('transactions', []);
         $count = 0;
-
-        foreach ($transactions as $txn) {
+        foreach ($data['transactions'] as $txn) {
             Transaction::create([
                 'id' => Str::uuid()->toString(),
                 'account_id' => $account->id,
@@ -45,16 +42,15 @@ class MockControlController extends Controller
         return new JsonResponse(['ok' => true, 'addedCount' => $count]);
     }
 
-    public function setDailyUnitPrices(Request $request): JsonResponse
+    public function setDailyUnitPrices(SetDailyUnitPricesRequest $request): JsonResponse
     {
-        $date = $request->input('date');
-        $prices = $request->input('prices', []);
+        $data = $request->validated();
 
-        foreach ($prices as $entry) {
+        foreach ($data['prices'] as $entry) {
             UnitPrice::updateOrCreate(
                 [
                     'asset_code' => $entry['assetCode'],
-                    'date' => $date,
+                    'date' => $data['date'],
                 ],
                 [
                     'price' => $entry['unitPrice'],
