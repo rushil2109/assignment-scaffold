@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: getHoldings endpoint
-The system SHALL expose `POST /public/getHoldings` accepting `{ userId, asOfDate? }` and returning `{ ok: true, holdings: [{assetCode, units, unitPrice, balance, effectiveDate}] }`.
+The system SHALL expose `POST /public/getHoldings` accepting `{ userId, memberId, accountId, asOfDate? }` (userId, memberId, accountId required) and returning `{ ok: true, holdings: [{assetCode, units, unitPrice, balance, effectiveDate}] }`, matching the canonical `GetHoldingsInput`/`GetHoldingsOutput`.
 
 #### Scenario: Holdings for specific date
 - **WHEN** getHoldings is called with asOfDate that has data
@@ -21,6 +21,10 @@ The system SHALL expose `POST /public/getHoldings` accepting `{ userId, asOfDate
 
 #### Scenario: Member not found
 - **WHEN** getHoldings is called with a userId that doesn't exist
+- **THEN** the system returns `{ ok: false, error: "..." }`
+
+#### Scenario: Missing memberId or accountId
+- **WHEN** getHoldings is called without memberId or accountId
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 ### Requirement: Holdings response includes all fields

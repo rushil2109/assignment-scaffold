@@ -18,6 +18,9 @@ class MockAdminApi implements AdminApiInterface
             'id' => Str::uuid()->toString(),
             'user_id' => $data['userId'] ?? null,
             'admin_id' => $adminId,
+            'first_name' => $data['firstName'] ?? null,
+            'last_name' => $data['lastName'] ?? null,
+            'date_of_birth' => $data['dateOfBirth'] ?? null,
             'email' => $data['email'] ?? null,
             'mobile' => $data['mobile'] ?? null,
             'preferred_name' => $data['preferredName'] ?? null,
@@ -165,7 +168,7 @@ class MockAdminApi implements AdminApiInterface
         return [
             'accountId' => $account->account_id,
             'transactions' => $transactions->map(fn ($t) => [
-                'id' => $t->id,
+                'transactionId' => $t->id,
                 'type' => $t->type,
                 'amount' => $t->amount,
                 'effectiveDate' => $t->effective_date->toDateString(),
@@ -213,6 +216,7 @@ class MockAdminApi implements AdminApiInterface
                 'units' => $h->units,
                 'unitPrice' => $h->unit_price,
                 'balance' => $h->balance,
+                'effectiveDate' => $h->effective_date->toDateString(),
             ])->toArray(),
         ];
     }

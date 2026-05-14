@@ -22,15 +22,18 @@ class PublicApiController extends Controller
     {
         $data = $request->json()->all();
 
-        if (empty($data['userId'])) {
-            return new JsonResponse(['ok' => false, 'error' => 'userId is required']);
+        $requiredFields = ['userId', 'firstName', 'lastName', 'email', 'mobile', 'dateOfBirth'];
+        foreach ($requiredFields as $field) {
+            if (empty($data[$field])) {
+                return new JsonResponse(['ok' => false, 'error' => "{$field} is required"]);
+            }
         }
 
-        if (! isset($data['investmentProfile']) || ! is_array($data['investmentProfile'])) {
-            return new JsonResponse(['ok' => false, 'error' => 'investmentProfile is required']);
+        if (! isset($data['initialInvestmentProfile']) || ! is_array($data['initialInvestmentProfile'])) {
+            return new JsonResponse(['ok' => false, 'error' => 'initialInvestmentProfile is required']);
         }
 
-        $validationError = $this->validateAllocations($data['investmentProfile']);
+        $validationError = $this->validateAllocations($data['initialInvestmentProfile']);
         if ($validationError) {
             return new JsonResponse(['ok' => false, 'error' => $validationError]);
         }
@@ -55,7 +58,7 @@ class PublicApiController extends Controller
             $result = $this->adminApi->createMember($adminId, $data);
 
             $this->adminApi->setInvestmentProfile($adminId, [
-                'allocations' => $data['investmentProfile'],
+                'allocations' => $data['initialInvestmentProfile'],
             ]);
 
             $operationId = $this->auditService->startOperation($data['userId'], 'createMember');
