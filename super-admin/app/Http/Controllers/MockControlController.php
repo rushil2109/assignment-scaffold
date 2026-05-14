@@ -57,7 +57,7 @@ class MockControlController extends Controller
                     'date' => $date,
                 ],
                 [
-                    'price' => $entry['price'],
+                    'price' => $entry['unitPrice'],
                 ]
             );
         }

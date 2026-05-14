@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: getInvestmentPortfolio endpoint
-The system SHALL expose `POST /public/getInvestmentPortfolio` accepting `{ userId }` and returning `{ ok: true, allocations: [{assetCode, percentage}] }`.
+The system SHALL expose `POST /public/getInvestmentPortfolio` accepting `{ userId, memberId, accountId }` (all required) and returning `{ ok: true, allocations: [{assetCode, percentage}] }`, matching the canonical `GetInvestmentPortfolioInput`/`GetInvestmentPortfolioOutput`.
 
 #### Scenario: Member with active profile
 - **WHEN** getInvestmentPortfolio is called for a member with a current profile
@@ -9,6 +9,10 @@ The system SHALL expose `POST /public/getInvestmentPortfolio` accepting `{ userI
 
 #### Scenario: Member not found
 - **WHEN** getInvestmentPortfolio is called with a userId that doesn't exist
+- **THEN** the system returns `{ ok: false, error: "..." }`
+
+#### Scenario: Missing memberId or accountId
+- **WHEN** getInvestmentPortfolio is called without memberId or accountId
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 ### Requirement: No audit trail for reads

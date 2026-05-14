@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: getTransactionHistory endpoint
-The system SHALL expose `POST /public/getTransactionHistory` accepting `{ userId, fromDate?, toDate? }` and returning `{ ok: true, transactions: [{transactionId, type, amount, effectiveDate}] }`.
+The system SHALL expose `POST /public/getTransactionHistory` accepting `{ userId, memberId, accountId, fromDate?, toDate? }` (userId, memberId, accountId required) and returning `{ ok: true, transactions: [{transactionId, type, amount, effectiveDate}] }`, matching the canonical `GetTransactionHistoryInput`/`GetTransactionHistoryOutput`.
 
 #### Scenario: All transactions (no filter)
 - **WHEN** getTransactionHistory is called without date filters
@@ -25,6 +25,10 @@ The system SHALL expose `POST /public/getTransactionHistory` accepting `{ userId
 
 #### Scenario: Member not found
 - **WHEN** getTransactionHistory is called with a userId that doesn't exist
+- **THEN** the system returns `{ ok: false, error: "..." }`
+
+#### Scenario: Missing memberId or accountId
+- **WHEN** getTransactionHistory is called without memberId or accountId
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 ### Requirement: Deterministic ordering

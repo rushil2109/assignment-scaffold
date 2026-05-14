@@ -1,18 +1,22 @@
 ## ADDED Requirements
 
 ### Requirement: updateMember endpoint
-The system SHALL expose `POST /public/updateMember` accepting a JSON body with userId (required) and optional fields: email, mobile, preferredName, residentialAddress, postalAddress.
+The system SHALL expose `POST /public/updateMember` accepting a JSON body with `userId` (required), `memberId` (required), and optional fields: `email`, `mobile`, `preferredName`, `residentialAddress`, `postalAddress`.
 
 #### Scenario: Valid update
-- **WHEN** a POST is made with a valid userId and at least one updatable field
+- **WHEN** a POST is made with a valid userId, memberId, and at least one updatable field
 - **THEN** the system updates the member, writes audit, and returns `{ ok: true, operationId }`
 
 #### Scenario: Member not found
-- **WHEN** a POST is made with a userId that doesn't exist
+- **WHEN** a POST is made with a userId/memberId that doesn't exist
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 #### Scenario: No updatable fields provided
-- **WHEN** a POST is made with only userId (no other fields)
+- **WHEN** a POST is made with only userId and memberId (no other fields)
+- **THEN** the system returns `{ ok: false, error: "..." }`
+
+#### Scenario: Missing memberId
+- **WHEN** a POST is made without memberId
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 ### Requirement: updateMember writes audit trail

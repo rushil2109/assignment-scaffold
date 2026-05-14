@@ -1,14 +1,18 @@
 ## ADDED Requirements
 
 ### Requirement: setInvestmentProfile endpoint
-The system SHALL expose `POST /public/setInvestmentProfile` accepting a JSON body with userId (required) and investmentProfile (array of {assetCode, percentage}, required).
+The system SHALL expose `POST /public/setInvestmentProfile` accepting a JSON body with `userId` (required), `memberId` (required), `accountId` (required), and `allocations` (array of `{assetCode, percentage}`, required), matching the canonical `SetInvestmentProfileInput`.
 
 #### Scenario: Valid profile change
-- **WHEN** a POST is made with valid userId and valid allocations summing to 100.00
+- **WHEN** a POST is made with valid userId, memberId, accountId, and valid allocations summing to 100.00
 - **THEN** the system sets the new profile, writes audit, and returns `{ ok: true, operationId }`
 
 #### Scenario: Member not found
 - **WHEN** a POST is made with a userId that doesn't exist
+- **THEN** the system returns `{ ok: false, error: "..." }`
+
+#### Scenario: Missing memberId or accountId
+- **WHEN** a POST is made without memberId or accountId
 - **THEN** the system returns `{ ok: false, error: "..." }`
 
 ### Requirement: Allocation validation (same rules as createMember)
