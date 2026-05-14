@@ -3,17 +3,20 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 class Kernel extends HttpKernel
 {
     protected $middleware = [
-        \Illuminate\Http\Middleware\HandleCors::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        HandleCors::class,
+        ValidatePostSize::class,
     ];
 
     protected $middlewareGroups = [
         'api' => [
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            SubstituteBindings::class,
         ],
     ];
 }
