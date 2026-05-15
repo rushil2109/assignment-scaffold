@@ -1,4 +1,4 @@
-.PHONY: bootstrap clean pint test
+.PHONY: bootstrap clean pint test test-filter
 
 bootstrap:
 	docker compose exec app php artisan app:bootstrap
@@ -11,3 +11,6 @@ pint:
 
 test:
 	docker compose exec app php artisan test
+
+test-filter:
+	docker compose exec app php artisan test --filter=$(filter)
