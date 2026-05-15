@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTransactionsRequest;
-use App\Http\Requests\ResetSubjectStateRequest;
 use App\Http\Requests\MoveDayForwardRequest;
+use App\Http\Requests\ResetSubjectStateRequest;
 use App\Http\Requests\SetDailyUnitPricesRequest;
 use App\Http\Resources\ApiErrorResponse;
 use App\Models\Holding;
@@ -75,6 +75,7 @@ class MockControlController extends Controller
 
         return new JsonResponse(['ok' => true]);
     }
+
     public function moveDayForward(MoveDayForwardRequest $request): JsonResponse
     {
         $data = $request->validated();

@@ -26,12 +26,12 @@ class MoveDayForwardTest extends TestCase
     private function createMemberWithProfile(string $userId = 'user-001'): array
     {
         $api = app(AdminApiInterface::class);
-        $member = $api->createMember('admin-' . $userId, [
+        $member = $api->createMember('admin-'.$userId, [
             'userId' => $userId,
-            'email' => $userId . '@example.com',
+            'email' => $userId.'@example.com',
         ]);
 
-        $api->setInvestmentProfile('admin-' . $userId, [
+        $api->setInvestmentProfile('admin-'.$userId, [
             'allocations' => [
                 ['assetCode' => 'Cash', 'percentage' => 40],
                 ['assetCode' => 'Growth', 'percentage' => 60],
