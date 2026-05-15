@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\InspectionController;
-use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\MockControlController;
 use App\Http\Controllers\PublicApiController;
 use Illuminate\Support\Facades\Route;
