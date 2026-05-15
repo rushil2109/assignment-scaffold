@@ -172,7 +172,7 @@ class MockAdminApi implements AdminApiInterface
                 'type' => $t->type,
                 'amount' => $t->amount,
                 'effectiveDate' => $t->effective_date->toDateString(),
-            ])->toArray(),
+            ])->values()->toArray(),
         ];
     }
 

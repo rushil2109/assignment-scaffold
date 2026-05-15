@@ -44,7 +44,7 @@ class MockControlEndpointsTest extends TestCase
         $this->assertEquals('contribution', $history['transactions'][0]['type']);
         $this->assertEquals('1000.00', $history['transactions'][0]['amount']);
 
-        $ids = array_column($history['transactions'], 'id');
+        $ids = array_column($history['transactions'], 'transactionId');
         $this->assertCount(3, array_unique($ids));
     }
 
@@ -53,8 +53,8 @@ class MockControlEndpointsTest extends TestCase
         $response = $this->postJson('/mock/setDailyUnitPrices', [
             'date' => '2024-01-15',
             'prices' => [
-                ['assetCode' => 'Cash', 'price' => '1.000000'],
-                ['assetCode' => 'Growth', 'price' => '2.500000'],
+                ['assetCode' => 'Cash', 'unitPrice' => '1.000000'],
+                ['assetCode' => 'Growth', 'unitPrice' => '2.500000'],
             ],
         ]);
 
@@ -70,7 +70,7 @@ class MockControlEndpointsTest extends TestCase
         $this->postJson('/mock/setDailyUnitPrices', [
             'date' => '2024-01-15',
             'prices' => [
-                ['assetCode' => 'Growth', 'price' => '3.000000'],
+                ['assetCode' => 'Growth', 'unitPrice' => '3.000000'],
             ],
         ]);
 
@@ -98,7 +98,7 @@ class MockControlEndpointsTest extends TestCase
         $this->postJson('/mock/setDailyUnitPrices', [
             'date' => '2024-01-15',
             'prices' => [
-                ['assetCode' => 'Cash', 'price' => '1.000000'],
+                ['assetCode' => 'Cash', 'unitPrice' => '1.000000'],
             ],
         ]);
 
