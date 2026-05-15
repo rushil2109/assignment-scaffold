@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddTransactionsRequest;
+use App\Http\Requests\ResetSubjectStateRequest;
 use App\Http\Requests\SetDailyUnitPricesRequest;
 use App\Http\Resources\ApiErrorResponse;
 use App\Models\Member;
@@ -57,6 +58,15 @@ class MockControlController extends Controller
                 ]
             );
         }
+
+        return new JsonResponse(['ok' => true]);
+    }
+
+    public function resetSubjectState(ResetSubjectStateRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        Member::where('user_id', $data['userId'])->delete();
 
         return new JsonResponse(['ok' => true]);
     }

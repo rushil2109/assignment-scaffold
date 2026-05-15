@@ -13,6 +13,7 @@ Route::prefix('public')->group(function () {
 Route::prefix('mock')->group(function () {
     Route::post('addTransactions', [MockControlController::class, 'addTransactions']);
     Route::post('setDailyUnitPrices', [MockControlController::class, 'setDailyUnitPrices']);
+    Route::post('resetSubjectState', [MockControlController::class, 'resetSubjectState']);
 });
 
 Route::prefix('inspection')->group(function () {
