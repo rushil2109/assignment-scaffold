@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\InspectionController;
-use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\MockControlController;
 use App\Http\Controllers\PublicApiController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +9,9 @@ Route::prefix('public')->group(function () {
     Route::post('/createMember', [PublicApiController::class, 'createMember']);
     Route::post('/updateMember', [PublicApiController::class, 'updateMember']);
     Route::post('/setInvestmentProfile', [PublicApiController::class, 'setInvestmentProfile']);
+    Route::post('/getInvestmentPortfolio', [PublicApiController::class, 'getInvestmentPortfolio']);
+    Route::post('/getTransactionHistory', [PublicApiController::class, 'getTransactionHistory']);
+    Route::post('/getHoldings', [PublicApiController::class, 'getHoldings']);
 });
 
 Route::prefix('mock')->group(function () {

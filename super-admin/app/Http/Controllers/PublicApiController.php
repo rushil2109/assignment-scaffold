@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Contracts\AdminApiInterface;
 use App\Http\Requests\CreateMemberRequest;
+use App\Http\Requests\GetHoldingsRequest;
+use App\Http\Requests\GetInvestmentPortfolioRequest;
+use App\Http\Requests\GetTransactionHistoryRequest;
 use App\Http\Requests\SetInvestmentProfileRequest;
 use App\Http\Requests\UpdateMemberRequest;
 use App\Http\Resources\ApiErrorResponse;
@@ -112,5 +115,66 @@ class PublicApiController extends Controller
 
             return new JsonResponse(['ok' => true, 'operationId' => $operationId]);
         });
+    }
+
+    public function getInvestmentPortfolio(GetInvestmentPortfolioRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
+
+        if (! $adminId) {
+            return ApiErrorResponse::make('Member not found.');
+        }
+
+        $result = $this->adminApi->getInvestmentPortfolio($adminId);
+
+        return new JsonResponse([
+            'ok' => true,
+            'allocations' => $result['allocations'],
+        ]);
+    }
+
+    public function getTransactionHistory(GetTransactionHistoryRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
+
+        if (! $adminId) {
+            return ApiErrorResponse::make('Member not found.');
+        }
+
+        $result = $this->adminApi->getTransactionHistory(
+            $adminId,
+            $data['fromDate'] ?? null,
+            $data['toDate'] ?? null,
+        );
+
+        return new JsonResponse([
+            'ok' => true,
+            'transactions' => $result['transactions'],
+        ]);
+    }
+
+    public function getHoldings(GetHoldingsRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
+
+        if (! $adminId) {
+            return ApiErrorResponse::make('Member not found.');
+        }
+
+        $result = $this->adminApi->getHoldings(
+            $adminId,
+            $data['asOfDate'] ?? null,
+        );
+
+        return new JsonResponse([
+            'ok' => true,
+            'holdings' => $result['holdings'],
+        ]);
     }
 }
