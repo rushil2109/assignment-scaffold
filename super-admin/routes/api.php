@@ -16,6 +16,7 @@ Route::prefix('mock')->group(function () {
     Route::post('addTransactions', [MockControlController::class, 'addTransactions']);
     Route::post('setDailyUnitPrices', [MockControlController::class, 'setDailyUnitPrices']);
     Route::post('resetSubjectState', [MockControlController::class, 'resetSubjectState']);
+    Route::post('moveDayForward', [MockControlController::class, 'moveDayForward']);
 });
 
 Route::prefix('inspection')->group(function () {
