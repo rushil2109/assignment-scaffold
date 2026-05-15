@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\MockControlController;
+use App\Http\Controllers\PublicApiController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('public')->group(function () {
@@ -11,6 +11,7 @@ Route::prefix('public')->group(function () {
 Route::prefix('mock')->group(function () {
     Route::post('addTransactions', [MockControlController::class, 'addTransactions']);
     Route::post('setDailyUnitPrices', [MockControlController::class, 'setDailyUnitPrices']);
+    Route::post('resetSubjectState', [MockControlController::class, 'resetSubjectState']);
 });
 
 Route::prefix('inspection')->group(function () {
