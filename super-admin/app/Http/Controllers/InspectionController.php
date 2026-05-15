@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GetRequestAuditRequest;
 use App\Http\Requests\ListAuditEventsRequest;
-use App\Http\Resources\ApiErrorResponse;
-use App\Http\Resources\AuditEventsResource;
-use App\Http\Resources\RequestAuditResource;
 use App\Models\AuditEvent;
 use App\Models\AuditOperation;
 use Illuminate\Http\JsonResponse;
 
 class InspectionController extends Controller
 {
-    public function getRequestAudit(GetRequestAuditRequest $request): RequestAuditResource|JsonResponse
+    public function getRequestAudit(GetRequestAuditRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -22,7 +19,7 @@ class InspectionController extends Controller
             ->first();
 
         if (! $operation) {
-            return ApiErrorResponse::make('Operation not found');
+            return new JsonResponse(['ok' => false, 'error' => 'Operation not found']);
         }
 
         $events = $operation->events()->orderBy('id')->get()->map(fn ($event) => [
@@ -31,7 +28,8 @@ class InspectionController extends Controller
             'details' => $event->details,
         ])->all();
 
-        return new RequestAuditResource([
+        return new JsonResponse([
+            'ok' => true,
             'audit' => [
                 'userId' => $operation->user_id,
                 'operationId' => $operation->id,
@@ -42,7 +40,7 @@ class InspectionController extends Controller
         ]);
     }
 
-    public function listAuditEvents(ListAuditEventsRequest $request): AuditEventsResource
+    public function listAuditEvents(ListAuditEventsRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -55,6 +53,6 @@ class InspectionController extends Controller
                 'details' => $event->details,
             ])->all();
 
-        return new AuditEventsResource(['events' => $events]);
+        return new JsonResponse(['ok' => true, 'events' => $events]);
     }
 }

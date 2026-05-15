@@ -9,8 +9,6 @@ use App\Http\Requests\GetInvestmentPortfolioRequest;
 use App\Http\Requests\GetTransactionHistoryRequest;
 use App\Http\Requests\SetInvestmentProfileRequest;
 use App\Http\Requests\UpdateMemberRequest;
-use App\Http\Resources\ApiErrorResponse;
-use App\Http\Resources\CreateMemberResource;
 use App\Models\AuditOperation;
 use App\Models\Member;
 use App\Services\AuditService;
@@ -28,7 +26,7 @@ class PublicApiController extends Controller
         private AuditService $auditService,
     ) {}
 
-    public function createMember(CreateMemberRequest $request): CreateMemberResource|ApiErrorResponse
+    public function createMember(CreateMemberRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -38,7 +36,8 @@ class PublicApiController extends Controller
                 ->where('operation', 'createMember')
                 ->value('id');
 
-            return new CreateMemberResource([
+            return new JsonResponse([
+                'ok' => true,
                 'memberId' => $existing->id,
                 'accountId' => $existing->account->account_id,
                 'operationId' => $operationId,
@@ -61,7 +60,8 @@ class PublicApiController extends Controller
             ]);
             $this->auditService->completeOperation($operationId, 'success');
 
-            return new CreateMemberResource([
+            return new JsonResponse([
+                'ok' => true,
                 'memberId' => $result['memberId'],
                 'accountId' => $result['accountId'],
                 'operationId' => $operationId,
@@ -76,7 +76,7 @@ class PublicApiController extends Controller
         $adminId = $this->resolveAdminId($data['userId'], $data['memberId']);
 
         if (! $adminId) {
-            return ApiErrorResponse::make('Member not found.');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found.']);
         }
 
         $updatable = array_diff_key($data, array_flip(['userId', 'memberId']));
@@ -99,7 +99,7 @@ class PublicApiController extends Controller
         $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
 
         if (! $adminId) {
-            return ApiErrorResponse::make('Member not found.');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found.']);
         }
 
         return DB::transaction(function () use ($data, $adminId) {
@@ -124,7 +124,7 @@ class PublicApiController extends Controller
         $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
 
         if (! $adminId) {
-            return ApiErrorResponse::make('Member not found.');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found.']);
         }
 
         $result = $this->adminApi->getInvestmentPortfolio($adminId);
@@ -142,7 +142,7 @@ class PublicApiController extends Controller
         $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
 
         if (! $adminId) {
-            return ApiErrorResponse::make('Member not found.');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found.']);
         }
 
         $result = $this->adminApi->getTransactionHistory(
@@ -164,7 +164,7 @@ class PublicApiController extends Controller
         $adminId = $this->resolveAdminId($data['userId'], $data['memberId'], $data['accountId']);
 
         if (! $adminId) {
-            return ApiErrorResponse::make('Member not found.');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found.']);
         }
 
         $result = $this->adminApi->getHoldings(

@@ -44,7 +44,7 @@ class ProfileChangeIsolationTest extends TestCase
         // Add transactions for days 2-4
         foreach (['2024-01-02', '2024-01-03', '2024-01-04'] as $i => $date) {
             Transaction::create([
-                'id' => "txn-iso-00" . ($i + 1),
+                'id' => 'txn-iso-00'.($i + 1),
                 'account_id' => $account->id,
                 'type' => 'contribution',
                 'amount' => '100.00',

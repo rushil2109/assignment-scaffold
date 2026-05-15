@@ -6,7 +6,6 @@ use App\Http\Requests\AddTransactionsRequest;
 use App\Http\Requests\MoveDayForwardRequest;
 use App\Http\Requests\ResetSubjectStateRequest;
 use App\Http\Requests\SetDailyUnitPricesRequest;
-use App\Http\Resources\ApiErrorResponse;
 use App\Models\Holding;
 use App\Models\InvestmentProfile;
 use App\Models\Member;
@@ -25,12 +24,12 @@ class MockControlController extends Controller
 
         $member = Member::where('user_id', $data['userId'])->first();
         if (! $member) {
-            return ApiErrorResponse::make('Member not found');
+            return new JsonResponse(['ok' => false, 'error' => 'Member not found']);
         }
 
         $account = $member->account;
         if (! $account || $account->account_id !== $data['accountId']) {
-            return ApiErrorResponse::make('Account not found');
+            return new JsonResponse(['ok' => false, 'error' => 'Account not found']);
         }
 
         $count = 0;
